@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Gasto Innecesario de Agua</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="../css/css.css">
+<script src="../js/datos.js"></script>
+<script src="../js/clasificador.js"></script>
+<script src="../js/utilities.js"></script>
+<!-- inicio -->
+</head>
+<body>
+
+<div class="header-app">
+  <div class="container">
+    <h1 style="display: inline-block;" role="banner">Calculadora de gasto innecesario de agua</h1>
+    <div class="header-buttons" role="navigation">
+      <button onclick="irAlPerfil()" class="btn-perfil" aria-label="Ir a mi perfil de usuario">Mi Perfil</button>
+      <button onclick="cerrarSesion()" class="btn-logout" aria-label="Cerrar sesión actual">Cerrar Sesión</button>
+    </div>
+  </div>
+</div>
+
+<div class="app-wrapper">
+<div class="container">
+  <div class="seccion">
+    <div class="seccion-titulo">Selector de Producto</div>
+    <div class="seccion-contenido">
+      <p>Selecciona un objeto de uso cotidiano para conocer su impacto en el consumo de agua:</p>
+
+      <select id="producto" aria-label="Selecciona un producto para calcular su impacto de agua">
+      <option value="">Selecciona un objeto</option>
+        <option value="refresco">Refresco (1 L)</option>
+        <option value="lata">Refresco en lata</option>
+        <option value="agua">Agua embotellada (1 L)</option>
+        <option value="cafe">Café preparado</option>
+        <option value="energia">Bebida energética</option>
+        <option value="cerveza">Cerveza</option>
+        <option value="cable">Cable USB</option>
+        <option value="audifonos">Audifonos</option>
+        <option value="cargador">Cargador de celular</option>
+        <option value="powerbank">Power bank</option>
+        <option value="celular">Celular nuevo</option>
+        <option value="tablet">Tablet</option>
+        <option value="laptop">Laptop</option>
+        <option value="monitor">Monitor</option>
+        <option value="consola">Consola de videojuegos</option>
+      </optgroup>
+
+      <optgroup label="Útiles escolares">
+        <option value="lapiz">Lápiz</option>
+        <option value="pluma">Pluma</option>
+    <option value="marcador">Marcador</option>
+    <option value="libreta">Libreta</option>
+    <option value="cuaderno">Cuaderno</option>
+    <option value="hoja">Hoja de papel</option>
+    <option value="paquete">Paquete de hojas</option>
+    <option value="folder">Folder</option>
+    <option value="carpeta">Carpeta</option>
+    <option value="mochila">Mochila</option>
+    <option value="calculadora">Calculadora</option>
+    <option value="cartucho">Cartucho de tinta</option>
+    <option value="toner">Toner</option>
+    <option value="libro">Libro impreso</option>
+  </optgroup>
+
+  <optgroup label="Ropa y textiles">
+    <option value="playera">Playera</option>
+    <option value="camisa">Camisa</option>
+    <option value="sudadera">Sudadera</option>
+    <option value="jeans">Jeans</option>
+    <option value="vestido">Vestido</option>
+    <option value="ropaInterior">Ropa interior</option>
+    <option value="calcetines">Calcetines</option>
+    <option value="tenis">Tenis</option>
+    <option value="chamarra">Chamarra</option>
+    <option value="toalla">Toalla</option>
+    <option value="sabana">Sábana</option>
+    <option value="cobija">Cobija</option>
+    <option value="uniforme">Uniforme escolar</option>
+    <option value="traje">Traje</option>
+  </optgroup>
+
+  <optgroup label="Alimentos">
+    <option value="arroz">Arroz (1 kg)</option>
+    <option value="carne">Carne roja (1 kg)</option>
+    <option value="pollo">Pollo (1 kg)</option>
+    <option value="pescado">Pescado (1 kg)</option>
+    <option value="leche">Leche (1 L)</option>
+    <option value="queso">Queso (1 kg)</option>
+    <option value="yogurt">Yogurt (1 L)</option>
+    <option value="huevo">Huevo (1 pieza)</option>
+    <option value="pan">Pan (1 pieza)</option>
+    <option value="pasta">Pasta (1 kg)</option>
+  </optgroup>
+
+  <optgroup label="Higiene Personal">
+    <option value="jabon">Jabon de mano</option>
+    <option value="champu">Champú</option>
+    <option value="toallaSanitaria">Toalla sanitaria</option>
+    <option value="desodorante">Desodorante</option>
+    <option value="tipoCepillo">Cepillo de dientes</option>
+    <option value="pastedental">Pasta dental</option>
+    <option value="rasurador">Rasurador</option>
+    <option value="locion">Locion corporal</option>
+  </optgroup>
+
+  <optgroup label="Accesorios">
+    <option value="bolsa">Bolsa</option>
+    <option value="cinturon">Cinturon</option>
+    <option value="gafas">Gafas/Lentes</option>
+    <option value="reloj">Reloj</option>
+    <option value="collar">Collar</option>
+    <option value="pulsera">Pulsera</option>
+    <option value="anillo">Anillo</option>
+    <option value="sombrero">Sombrero</option>
+    <option value="bufanda">Bufanda</option>
+    <option value="guantes">Guantes</option>
+  </optgroup>
+</select>
+      
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button onclick="agregarAlCarrito()" class="btn-calcular" style="flex: 1;" aria-label="Agregar producto seleccionado a la lista">Agregar a la lista (+)</button>
+      </div>
+
+      <div id="lista-carrito" style="margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 10px;">
+        <p style="color: #888; font-style: italic; font-size: 0.9em; text-align: center;">Tu lista esta vacia</p>
+      </div>
+
+      <button onclick="calcularTotal()" id="btn-calcular-total" class="btn-calcular" style="margin-top: 15px; width: 100%; display: none; background-color: #2d3748;" aria-label="Calcular el impacto total de agua para todos los productos seleccionados">Calcular Impacto Total</button>
+    </div>
+  </div>
+
+  <!-- Resultados -->
+  <div class="seccion">
+    <div class="seccion-titulo">Resultado</div>
+    <div class="seccion-contenido">
+      <div class="resultado" id="resultado">
+        <p style="color: #999; text-align: center; margin: 20px 0;">Selecciona un producto y haz clic en "Calcular" para ver los resultados</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// Verificar si hay sesión activa
+let carrito = [];
+
+window.addEventListener('DOMContentLoaded', function() {
+  const sesionActiva = localStorage.getItem('usuarioActivo');
+  if (!sesionActiva) {
+    window.location.href = 'login.html';
+    return;
+  }
+});
+
+function agregarAlCarrito() {
+  const select = document.getElementById("producto");
+  const productoKey = select.value;
+  
+  if (!productoKey) {
+    alert("Por favor selecciona un producto primero");
+    return;
+  }
+
+  const nombre = select.options[select.selectedIndex].text;
+  const litros = datos[productoKey];
+
+  carrito.push({
+    key: productoKey,
+    nombre: nombre,
+    litros: litros
+  });
+
+  actualizarVistaCarrito();
+  select.value = ""; // resetear seleccion
+}
+
+function eliminarDelCarrito(index) {
+  carrito.splice(index, 1);
+  actualizarVistaCarrito();
+}
+
+function actualizarVistaCarrito() {
+  const container = document.getElementById("lista-carrito");
+  const btnCalcular = document.getElementById("btn-calcular-total");
+
+  if (carrito.length === 0) {
+    container.innerHTML = '<p style="color: #888; font-style: italic; font-size: 0.9em; text-align: center;">Tu lista esta vacia</p>';
+    btnCalcular.style.display = 'none';
+    document.getElementById("resultado").innerHTML = '<p style="color: #999; text-align: center; margin: 20px 0;">Selecciona productos y agrégalos a la lista para calcular</p>';
+    return;
+  }
+
+  let html = '<ul style="list-style: none; padding: 0; margin: 0;">';
+  carrito.forEach((item, index) => {
+    html += `
+      <li style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+        <span>${item.nombre}</span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-weight: bold; font-size: 0.9em;">${item.litros.toLocaleString()} L</span>
+          <button onclick="eliminarDelCarrito(${index})" style="background: #ff6b6b; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
+        </div>
+      </li>
+    `;
+  });
+  html += '</ul>';
+  
+  container.innerHTML = html;
+  btnCalcular.style.display = 'block';
+}
+
+function calcularTotal() {
+  if (carrito.length === 0) return;
+
+  let totalLitros = 0;
+  let htmlDetalles = '';
+
+  // procesar cada item
+  carrito.forEach(item => {
+    totalLitros += item.litros;
+    
+    // clasificar individual para reporte e historial
+    const clasificacion = clasificarObjeto(item.key, item.litros);
+    registrarBusqueda(item.key, item.litros, clasificacion);
+    
+    // agregar historial visual
+    agregarAlHistorialVisual(item.nombre, item.litros, clasificacion.categoria);
+    
+    // mostrar notificacion si impacto alto
+    mostrarNotificacionImpactoAlto(item.litros, item.nombre);
+
+    // color segun categoria
+    const categoriaColor = {
+      'consumo innecesario': '#ff6b6b',
+      'uso moderado': '#ffd93d',
+      'uso responsable': '#6bcf7f'
+    };
+    const color = categoriaColor[clasificacion.categoria] || '#667eea';
+
+    // tip inteligente (si existe)
+    const tip = (typeof alternativasEco !== 'undefined' && alternativasEco[item.key]) 
+      ? `<br><small style="color: #2ecc71; display:block; margin-top:4px;">💡 <strong>Tip:</strong> ${alternativasEco[item.key]}</small>` 
+      : '';
+
+    // explicacion del por que
+    const razon = `Este objeto tiene un impacto hidrico <strong>${clasificacion.impacto.toUpperCase()}</strong> y se considera de necesidad <strong>${clasificacion.necesidad.toUpperCase()}</strong>.`;
+
+    htmlDetalles += `
+      <div style="margin-bottom: 12px; padding: 10px; border-left: 4px solid ${color}; background: rgba(0,0,0,0.02);">
+        <div style="display:flex; justify-content:space-between;">
+          <strong>${item.nombre}</strong>
+          <span style="color:${color}; font-weight:bold;">${item.litros.toLocaleString()} L</span>
+        </div>
+        <small style="color: #666;">${clasificacion.categoria.toUpperCase()}</small>
+        ${tip}
+        
+        <details style="margin-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px;">
+          <summary style="cursor: pointer; font-size: 0.9em; font-weight: bold; opacity: 0.8;">❓ Ver detalles y explicación</summary>
+          <div style="margin-top: 8px; font-size: 0.9em; padding-left: 10px; border-left: 2px solid rgba(0,0,0,0.1);">
+            <p style="margin: 4px 0;">${razon}</p>
+            <hr style="border: 0; border-top: 1px dashed rgba(0,0,0,0.1); margin: 8px 0;">
+            <p style="margin: 4px 0; line-height: 1.4;">${clasificacion.explicacion.replace(/\n/g, '<br>')}</p>
+          </div>
+        </details>
+      </div>
+    `;
+  });
+
+  // resumen total
+  const minutosDucha = totalLitros / 10;
+  
+  let htmlResultado = `
+    <div style="text-align: center; padding: 20px; background: rgba(102, 126, 234, 0.1); border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(102, 126, 234, 0.3);">
+      <h2 style="margin: 0 0 10px 0; color: #5a67d8;">Impacto Total</h2>
+      <div style="font-size: 2.5em; font-weight: bold; color: #2d3748; margin-bottom: 10px;">
+        ${totalLitros.toLocaleString()} <span style="font-size: 0.4em; color: #718096;">litros de agua</span>
+      </div>
+      <p style="margin: 0; color: #4a5568;">
+        Equivale a dejar la ducha abierta por <strong>${minutosDucha.toFixed(0)} minutos</strong>.
+      </p>
+    </div>
+    
+    <h4 style="border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px;">Desglose de tu lista:</h4>
+    ${htmlDetalles}
+    
+    <button onclick="limpiarCarrito()" class="btn-calcular" style="margin-top: 20px; background-color: #718096;">Limpiar y empezar de nuevo</button>
+  `;
+
+  document.getElementById("resultado").innerHTML = htmlResultado;
+}
+
+function limpiarCarrito() {
+  carrito = [];
+  actualizarVistaCarrito();
+}
+
+function registrarBusqueda(producto, litros, clasificacion) {
+  const usuario = JSON.parse(localStorage.getItem('usuarioActivo'));
+  let usuarioData = JSON.parse(localStorage.getItem('usuarioData_' + usuario.username));
+  
+  if (!usuarioData) {
+    usuarioData = {
+      username: usuario.username,
+      fotoPerfil: null,
+      fechaRegistro: new Date().toLocaleString(),
+      historial: [],
+      estadisticas: {
+        totalBusquedas: 0,
+        productosConteo: {},
+        totalLitros: 0
+      }
+    };
+  }
+  
+  // actualizar estadisticas
+  usuarioData.estadisticas.totalBusquedas++;
+  usuarioData.estadisticas.totalLitros += litros;
+  
+  if (!usuarioData.estadisticas.productosConteo[producto]) {
+    usuarioData.estadisticas.productosConteo[producto] = 0;
+  }
+  usuarioData.estadisticas.productosConteo[producto]++;
+  
+  // agregar historial
+  usuarioData.historial.push({
+    producto: producto,
+    litros: litros,
+    categoria: clasificacion.categoria,
+    necesidad: clasificacion.necesidad,
+    fecha: new Date().toLocaleString()
+  });
+  
+  localStorage.setItem('usuarioData_' + usuario.username, JSON.stringify(usuarioData));
+}
+
+function irAlPerfil() {
+  window.location.href = 'perfil.html';
+}
+
+function cerrarSesion() {
+  if (confirm('¿Estas seguro de que deseas cerrar sesion?')) {
+    localStorage.removeItem('usuarioActivo');
+    window.location.href = 'login.html';
+  }
+}
+</script>
+<script src="../js/theme.js"></script>
+<script src="../js/footer.js"></script>
+<!-- fin -->
+
+</body>
+</html>
+

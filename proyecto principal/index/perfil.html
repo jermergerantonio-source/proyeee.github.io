@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - Calculadora de Agua</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="../css/css.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="header-app">
+  <div class="container">
+    <h1 style="display: inline-block;" role="banner">Mi Perfil</h1>
+    <div class="header-buttons" role="navigation">
+      <button onclick="irAlCalculador()" class="btn-perfil" aria-label="Ir a la calculadora">Calculadora</button>
+      <button onclick="cerrarSesion()" class="btn-logout" aria-label="Cerrar sesion actual">Cerrar Sesion</button>
+    </div>
+  </div>
+</div>
+
+<div class="app-wrapper">
+<div class="container perfil-container">
+  <!-- seccion foto perfil -->
+  <div class="profile-card">
+    <div class="foto-perfil-section">
+      <div class="foto-perfil-wrapper">
+        <img id="fotoPerfil" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23ddd'/%3E%3Ccircle cx='100' cy='70' r='35' fill='%23999'/%3E%3Cellipse cx='100' cy='150' rx='50' ry='40' fill='%23999'/%3E%3C/svg%3E" alt="Foto de perfil" class="foto-perfil">
+        <label for="uploadFoto" class="btn-upload-foto">Cambiar foto</label>
+        <input type="file" id="uploadFoto" accept="image/*" style="display:none;">
+      </div>
+
+      <div class="info-usuario">
+        <h2 id="nombreUsuario"></h2>
+        <p id="fechaRegistro"></p>
+        <p id="fechaLogin"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- seccion estadisticas -->
+  <div class="estadisticas-section">
+    <h3>Mis Estadisticas</h3>
+    
+    <div class="stats-grid">
+      <div class="stat-card clickable-stat" onclick="abrirModalBusquedas()" style="cursor: pointer;">
+        <div class="stat-number" id="totalBusquedas">0</div>
+        <div class="stat-label">Búsquedas Realizadas</div>
+        <div class="stat-hint">Haz clic para ver detalles</div>
+      </div>
+      <div class="stat-card clickable-stat" onclick="abrirModalProducto()" style="cursor: pointer;">
+        <div class="stat-number" id="productoMasBuscado">-</div>
+        <div class="stat-label">Producto Más Buscado</div>
+        <div class="stat-hint">Haz clic para ver detalles</div>
+      </div>
+      <div class="stat-card clickable-stat" onclick="abrirModalPromedio()" style="cursor: pointer;">
+        <div class="stat-number" id="promediaLitros">0</div>
+        <div class="stat-label">Promedio de Litros</div>
+        <div class="stat-hint">Haz clic para ver detalles</div>
+      </div>
+      <div class="stat-card clickable-stat" onclick="abrirModalTotal()" style="cursor: pointer;">
+        <div class="stat-number" id="totalLitros">0</div>
+        <div class="stat-label">Total de Litros</div>
+        <div class="stat-hint">Haz clic para ver detalles</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- graficos -->
+  <div class="graficos-section">
+    <div class="grafico-card">
+      <h4>Top 5 Productos Más Buscados</h4>
+      <canvas id="chartProductos" height="80"></canvas>
+    </div>
+
+    <div class="grafico-card">
+      <h4>Categorias de Busqueda</h4>
+      <canvas id="chartCategorias" height="80"></canvas>
+    </div>
+  </div>
+
+  <!-- boton limpiar historial -->
+  <div class="acciones-section">
+    <button onclick="limpiarHistorial()" class="btn-danger">Limpiar Historial</button>
+    <button onclick="crearBackupCompleto()" class="btn-primary btn-backup-download">📥 Descargar Backup</button>
+    <button onclick="document.getElementById('restore-input').click()" class="btn-primary btn-backup-restore">📤 Restaurar Backup</button>
+    <input type="file" id="restore-input" accept=".json" style="display: none;" onchange="restaurarBackup(this.files[0])">
+  </div>
+
+</div>
+</div>
+
+<!-- modales detalles estadisticas -->
+
+<!-- modal busquedas realizadas -->
+<div id="modalBusquedas" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="cerrarModal('modalBusquedas')">&times;</span>
+    <h2>Historial de Búsquedas</h2>
+    <div id="historicalBusquedas" class="modal-body">
+      <!-- se llena dinamicamente -->
+    </div>
+  </div>
+</div>
+
+<!-- modal producto mas buscado -->
+<div id="modalProducto" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="cerrarModal('modalProducto')">&times;</span>
+    <h2>Información del Producto Más Buscado</h2>
+    <div id="detallesProducto" class="modal-body">
+      <!-- se llena dinamicamente -->
+    </div>
+  </div>
+</div>
+
+<!-- modal promedio de litros -->
+<div id="modalPromedio" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="cerrarModal('modalPromedio')">&times;</span>
+    <h2>Análisis de Promedio de Litros</h2>
+    <div id="detallesPromedio" class="modal-body">
+      <!-- se llena dinamicamente -->
+    </div>
+  </div>
+</div>
+
+<!-- modal total de litros -->
+<div id="modalTotal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="cerrarModal('modalTotal')">&times;</span>
+    <h2>Resumen Total de Litros</h2>
+    <div id="detallesTotal" class="modal-body">
+      <!-- se llena dinamicamente -->
+    </div>
+  </div>
+</div>
+
+<script src="../js/perfil.js"></script>
+<script src="../js/utilities.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/footer.js"></script>
+
+</body>
+</html>
