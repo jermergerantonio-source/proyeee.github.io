@@ -1,6 +1,6 @@
 (function() {
   const KEY = 'modo_tema_activo'; 
-  const GOTHIC_HREF = '../css/gothic.css';
+  const GOTHIC_HREF = 'css/gothic.css';
   const BTN_ID = 'theme-toggle-button';
 
   // Obtiene el tema guardado
